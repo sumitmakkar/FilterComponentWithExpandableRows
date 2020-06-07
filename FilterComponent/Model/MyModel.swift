@@ -8,13 +8,26 @@
 
 import Foundation
 
-struct MyModel {
+let thresholdValue = 3
+
+class MyModel {
     var filterName: String
     var childFilterArray: [ChildFilter]
     var isExpanded = false
     var isViewMoreEnabled = false
+    
+    init(filterName: String, childFilterArray: [ChildFilter])
+    {
+        self.filterName       = filterName
+        self.childFilterArray = childFilterArray
+    }
 }
 
 struct ChildFilter {
     var childFilterName: String
+}
+
+
+struct Nestedmodel {
+    
 }

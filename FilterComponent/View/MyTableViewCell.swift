@@ -15,9 +15,13 @@ class MyTableViewCell: UITableViewCell
     
     private var dataSource: MyModel!
     
-    func setupCell(withData data: MyModel)
+    var reloadIndexPath: ((IndexPath?) -> Void)?
+    var currentIndexPath: IndexPath?
+    
+    func setupCell(withData data: MyModel, andIndexPath indexPath: IndexPath)
     {
         self.dataSource             = data
+        self.currentIndexPath       = indexPath
         lbl.text                    = data.filterName
         myCollectionView.dataSource = self
         myCollectionView.delegate   = self
@@ -29,16 +33,18 @@ extension MyTableViewCell: UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
-        return dataSource.childFilterArray.count < 5 ? dataSource.childFilterArray.count : (dataSource.childFilterArray.count >= 5 && self.dataSource.isViewMoreEnabled) ? dataSource.childFilterArray.count : 5
+        return dataSource.childFilterArray.count <= thresholdValue ? dataSource.childFilterArray.count : (dataSource.childFilterArray.count > thresholdValue && self.dataSource.isViewMoreEnabled) ? dataSource.childFilterArray.count + 1 : thresholdValue+1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        if (indexPath.row < 4 || (indexPath.row >= 4 && self.dataSource.isViewMoreEnabled))
+        if (indexPath.row < thresholdValue || (self.dataSource.isViewMoreEnabled && indexPath.row < self.dataSource.childFilterArray.count))
         {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cvc", for: indexPath) as? MyCollectionViewCell
             {
-                cell.setupCell(WithData: dataSource.childFilterArray[indexPath.row].childFilterName)
+                let lastValue          = self.dataSource.isViewMoreEnabled ? self.dataSource.childFilterArray.count : thresholdValue - 1
+                let cellWidth: CGFloat = indexPath.item == lastValue ? collectionView.frame.size.width - 32 : 120
+                cell.setupCell(WithData: dataSource.childFilterArray[indexPath.row].childFilterName, andWidth: cellWidth)
                 return cell
             }
         }
@@ -46,6 +52,7 @@ extension MyTableViewCell: UICollectionViewDataSource
         {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "viewmore", for: indexPath) as? ViewMoreCollectionViewCell
             {
+                cell.setupCell(with: self.dataSource.isViewMoreEnabled ? "Show Less" : "View More")
                 return cell
             }
         }
@@ -59,8 +66,9 @@ extension MyTableViewCell: UICollectionViewDelegate
     {
         if let _ = collectionView.cellForItem(at: indexPath) as? ViewMoreCollectionViewCell
         {
-            self.dataSource.isViewMoreEnabled = true
+            self.dataSource.isViewMoreEnabled = !self.dataSource.isViewMoreEnabled
             collectionView.reloadData()
+            self.reloadIndexPath?(self.currentIndexPath)
         }
     }
 }

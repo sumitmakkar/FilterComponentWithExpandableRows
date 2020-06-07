@@ -12,9 +12,11 @@ class MyCollectionViewCell: UICollectionViewCell
 {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var titleLbl: UILabel!
-    
-    func setupCell(WithData data: String)
+    @IBOutlet weak var titleLabelWidthConstraint: NSLayoutConstraint!
+        
+    func setupCell(WithData data: String, andWidth cellWidth: CGFloat = 120)
     {
         titleLbl.text = data
+        titleLabelWidthConstraint.constant = cellWidth
     }
 }
