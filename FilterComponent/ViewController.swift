@@ -74,6 +74,10 @@ extension ViewController: UITableViewDelegate
     {
         let padding      : CGFloat = 10.0
         let filterHeight : CGFloat = 24.0
-        return self.dataSourceArray[indexPath.row].isViewMoreEnabled ? (CGFloat((self.dataSourceArray[indexPath.row].childFilterArray.count/2) + (self.dataSourceArray[indexPath.section].childFilterArray.count%2) + 1) * (filterHeight + padding) + 78.5) : (CGFloat((thresholdValue/2) + (thresholdValue%2) + 1) * (filterHeight + padding) + 78.5)
+        if self.dataSourceArray[indexPath.row].childFilterArray.count > thresholdValue
+        {
+            return self.dataSourceArray[indexPath.row].isViewMoreEnabled ? (CGFloat((self.dataSourceArray[indexPath.row].childFilterArray.count/2) + (self.dataSourceArray[indexPath.section].childFilterArray.count%2) + 1) * (filterHeight + padding) + 78.5) : (CGFloat((thresholdValue/2) + (thresholdValue%2) + 1) * (filterHeight + padding) + 78.5)
+        }
+        return (CGFloat((self.dataSourceArray[indexPath.row].childFilterArray.count/2) + (self.dataSourceArray[indexPath.row].childFilterArray.count%2)) * (filterHeight + padding) + 78.5)
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-let thresholdValue = 3
+let thresholdValue = 5
 
 class MyModel {
     var filterName: String

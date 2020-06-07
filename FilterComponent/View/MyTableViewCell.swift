@@ -42,8 +42,14 @@ extension MyTableViewCell: UICollectionViewDataSource
         {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cvc", for: indexPath) as? MyCollectionViewCell
             {
-                let lastValue          = self.dataSource.isViewMoreEnabled ? self.dataSource.childFilterArray.count : thresholdValue - 1
-                let cellWidth: CGFloat = indexPath.item == lastValue ? collectionView.frame.size.width - 32 : 120
+                /*let lastValue          = self.dataSource.childFilterArray.count > thresholdValue ? self.dataSource.isViewMoreEnabled ? self.dataSource.childFilterArray.count : thresholdValue - 1 : self.dataSource.childFilterArray.count*/
+                var lastValue: Int
+                var cellWidth: CGFloat = 120
+                if min(thresholdValue, self.dataSource.childFilterArray.count) % 2 == 1
+                {
+                    lastValue = self.dataSource.isViewMoreEnabled ? self.dataSource.childFilterArray.count : thresholdValue - 1
+                    cellWidth = indexPath.item == lastValue ? collectionView.frame.size.width - 32 : 120
+                }
                 cell.setupCell(WithData: dataSource.childFilterArray[indexPath.row].childFilterName, andWidth: cellWidth)
                 return cell
             }
