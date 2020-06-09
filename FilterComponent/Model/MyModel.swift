@@ -8,6 +8,12 @@
 
 import Foundation
 
+enum CellType
+{
+    case cellTypeOne
+    case cellTypeTwo
+}
+
 let thresholdValue = 3
 
 class MyModel {
@@ -15,19 +21,23 @@ class MyModel {
     var childFilterArray: [ChildFilter]
     var isExpanded = false
     var isViewMoreEnabled = false
-    
-    init(filterName: String, childFilterArray: [ChildFilter])
+    var cellType: CellType = .cellTypeOne
+    init(filterName: String, childFilterArray: [ChildFilter], cType: CellType = .cellTypeOne)
     {
         self.filterName       = filterName
         self.childFilterArray = childFilterArray
+        self.cellType         = cType
     }
 }
 
-struct ChildFilter {
+class ChildFilter {
     var childFilterName: String
-}
-
-
-struct Nestedmodel {
+    var subchildArray: [ChildFilter]? = nil
+    var isExpanded = false
     
+    init(childFilterName: String, subchildArray: [ChildFilter]? = nil)
+    {
+        self.childFilterName = childFilterName
+        self.subchildArray   = subchildArray
+    }
 }
