@@ -8,6 +8,12 @@
 
 import UIKit
 
-class ViewMoreCollectionViewCell: UICollectionViewCell {
+class ViewMoreCollectionViewCell: UICollectionViewCell
+{
+    @IBOutlet weak var viewMoreButton: UILabel!
     
+    func setupCell(with labelString: String = "View More")
+    {
+        self.viewMoreButton.text = labelString
+    }
 }
